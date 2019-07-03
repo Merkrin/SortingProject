@@ -6,7 +6,7 @@ uint classic_bubble_sort(int, int);
 // Метод сортировки пузырьком с условием Айверсона - 1.
 uint first_iverson_bubble_sort(int, int);
 
-// Метод сортировки пузырьком с условием Айверсона - 2.
+// Метод сортировки пузырьком с условием Айверсона - 1+2.
 uint second_iverson_bubble_sort(int, int);
 
 // Метод изменения местами элементов массива.
@@ -59,6 +59,10 @@ uint classic_bubble_sort(int numbers[], int array_length) {
     for (int i = 0; i < array_length - 1; ++i) {
         for (int j = 0; j < array_length - i - 1; ++j) {
             if (numbers[j] > numbers[j + 1]) {
+                // 1 операция сложения, 1 операция сложения,
+                // 2 операции взятия элемента массива. Всего 4 операции.
+                operations_amount += 4;
+
                 swap_elements(numbers[j], numbers[j + 1], operations_amount);
 
                 // 2 раза была произведена операция взятия элемента массива
@@ -84,6 +88,46 @@ uint first_iverson_bubble_sort(int numbers[], int array_length) {
     // Счётчик операций.
     uint operations_amount = 0;
 
+    bool flag;
+
+    int i = 0;
+    // Была произведена операция присваивания.
+    ++operations_amount;
+
+    do {
+        flag = true;
+        // Была произведена операция присваивания.
+        ++operations_amount;
+
+        for (int j = 0; j < array_length - i - 1; ++j) {
+            if (numbers[j] > numbers[j + 1]) {
+                // 1 операция сложения, 1 операция сложения,
+                // 2 операции взятия элемента массива. Всего 4 операции.
+                operations_amount += 4;
+
+                swap_elements(numbers[j], numbers[j + 1], operations_amount);
+                // 2 раза была произведена операция взятия элемента массива
+                // и 1 раз - сложения. Всего 3 операции.
+                operations_amount += 3;
+
+                flag = false;
+                // Была произведена операция присваивания.
+                operations_amount++;
+            }
+        }
+
+        ++i;
+        // Аналогично classic_bubble_sort, а также
+        // 2 операции в ++i и логическая операция отрицания, логическое "и" и
+        // операция сравнения, то есть ещё 5 операций.
+        operations_amount += 3 * (array_length - i - 1) + 2 + 5;
+    } while (!flag && i < array_length);
+}
+
+uint second_iverson_bubble_sort(int numbers[], int array_length) {
+    // Счётчик операций.
+    uint operations_amount = 0;
+
     bool is_swapped;
 
     for (int i = 0; i < array_length - 1; ++i) {
@@ -94,6 +138,7 @@ uint first_iverson_bubble_sort(int numbers[], int array_length) {
 
         for (int j = 0; j < array_length - i - 1; ++j) {
             if (numbers[j] > numbers[j + 1]) {
+                operations_amount += 4;
                 swap_elements(numbers[j], numbers[j + 1], operations_amount);
 
                 // Аналогично classic_bubble_sort.
@@ -119,31 +164,6 @@ uint first_iverson_bubble_sort(int numbers[], int array_length) {
     operations_amount += 3 * (array_length - 1) + 2;
 
     return operations_amount;
-}
-
-uint second_iverson_bubble_sort(int numbers[], int array_length) {
-    // Счётчик операций.
-    uint operations_amount = 0;
-
-    int t;
-
-    do {
-        t = 0;
-        ++operations_amount;
-
-        for (int i = 0; i < array_length - 1; ++i) {
-            if (numbers[i] > numbers[i + 1]) {
-                swap_elements(numbers[i], numbers[i + 1], operations_amount);
-                t = i;
-            }
-            ++operations_amount;
-        }
-        operations_amount += 3 * (array_length - 1) + 2;
-
-        array_length = t;
-
-        operations_amount += 2;
-    } while (array_length > 1);
 }
 
 void swap_elements(int &first_element, int &second_element, uint &operations_amount) {
