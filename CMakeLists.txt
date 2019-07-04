@@ -3,4 +3,4 @@ project(IABarchuk_181)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(IABarchuk_181 main.cpp)
+add_executable(IABarchuk_181 main.cpp header.h sortings.cpp)
